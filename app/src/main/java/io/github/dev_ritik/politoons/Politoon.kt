@@ -1,10 +1,15 @@
 package io.github.dev_ritik.politoons
 
+import com.google.gson.annotations.SerializedName
+
 
 class Politoon {
 
+    @SerializedName("name")
     var name: String? = null
+    @SerializedName("majorRole")
     var majorRole: String? = null
+    @SerializedName("party")
     var party: String? = null
 
     constructor() {}
@@ -22,7 +27,6 @@ class Politoon {
         this.majorRole = majorRole
         this.party = party
     }
-
 
 
 }

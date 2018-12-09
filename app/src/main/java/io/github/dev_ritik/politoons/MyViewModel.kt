@@ -8,14 +8,14 @@ import android.util.Log
 
 
 class MyViewModel(private val mRepository: ToonRepository?) : ViewModel() {
-    private val LOG_TAG = MyViewModel::class.java.getSimpleName()
+    private val LOG_TAG = MyViewModel::class.java.simpleName
 
     // Weather forecast the user is looking at
-    val toon: MutableLiveData<Politoon> = MutableLiveData()
+    var toon: MutableLiveData<Politoon> = MutableLiveData()
 
     init {
         Log.i(LOG_TAG, "MyViewModel: ")
-//        mWeather = mRepository.getWeatherByDate(mDate)
+         mRepository?.fetch()
     }
 
 }

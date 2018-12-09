@@ -1,6 +1,13 @@
 package io.github.dev_ritik.politoons
 
 import android.util.Log
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import okhttp3.OkHttpClient
+import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 
 class ToonRepository {
@@ -17,17 +24,11 @@ class ToonRepository {
     private var mInitialized = false
 //    private val diskIO: Executor? = null
 
-//    private fun ToonRepository(
-//    ): ??? {
-//
-//    }
-
-
     @Synchronized
     fun getInstance(
 
     ): ToonRepository? {
-        Log.i(LOG_TAG, "Getting the repository" + sInstance)
+        Log.i(LOG_TAG, "Getting the repository$sInstance")
         if (sInstance == null) {
             synchronized(LOCK) {
                 sInstance = ToonRepository(
@@ -53,7 +54,33 @@ class ToonRepository {
         fetch()
     }
 
-    private fun fetch() {
+    fun fetch() {
+        Log.i(LOG_TAG, "fetch: ")
+        val BASE_URL = "https://politoons.herokuapp.com"
+
+        val ret: ToonsDataAPI = Retrofit.Builder()
+            .baseUrl(BASE_URL)
+            .client(
+                OkHttpClient.Builder()
+                    .connectTimeout(100, TimeUnit.SECONDS)
+                    .readTimeout(100, TimeUnit.SECONDS).build()
+            )
+            .addConverterFactory(GsonConverterFactory.create())
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build().create(ToonsDataAPI::class.java)
+
+        val call = ret.data.observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
+            .subscribe(fun(result: List<Politoon>?) {
+                Log.i("Result", "There are ${result?.size} Java developers in Lagos")
+                if (result != null) {
+                    for (i in result) {
+                        Log.i(LOG_TAG, "items : ${i.name}")
+                    }
+                }
+            }, { error ->
+                error.printStackTrace()
+            })
 
     }
 }
