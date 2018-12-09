@@ -11,12 +11,12 @@ import io.github.dev_ritik.politoons.model.Politoon
 class MyViewModel(private val mRepository: ToonRepository?) : ViewModel() {
     private val LOG_TAG = MyViewModel::class.java.simpleName
 
-    // Weather forecast the user is looking at
     var toon: MutableLiveData<List<Politoon>>? = null
+    var errorMessage: MutableLiveData<String> = MutableLiveData()
 
     init {
         Log.i(LOG_TAG, "MyViewModel: ")
-        toon = mRepository?.fetch()
+        toon = mRepository?.fetch(this.errorMessage)
     }
 
 }
