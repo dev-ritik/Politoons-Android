@@ -1,6 +1,8 @@
-package io.github.dev_ritik.politoons
+package io.github.dev_ritik.politoons.data
 
+import android.arch.lifecycle.MutableLiveData
 import android.util.Log
+import io.github.dev_ritik.politoons.model.Politoon
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
@@ -11,13 +13,31 @@ import java.util.concurrent.TimeUnit
 
 
 class ToonRepository {
-    private val LOG_TAG = ToonRepository::class.java.getSimpleName()
+
+    var allToons: MutableLiveData<List<Politoon>> = MutableLiveData()
+
+    private val LOG_TAG = ToonRepository::class.java.simpleName
 
     // For Singleton instantiation
-    private val LOCK = Any()
 
     //    private var sInstance: ToonRepository? = null
     companion object {
+        private val LOCK = Any()
+        @Synchronized
+        public fun getInstance(): ToonRepository? {
+            Log.i("point", "Getting the repository$sInstance")
+            if (sInstance == null) {
+                synchronized(LOCK) {
+                    sInstance =
+                            ToonRepository(
+                            )
+                    Log.i("point", "Made new repository")
+                }
+            }
+            return sInstance
+
+        }
+
         var sInstance: ToonRepository? = null
     }
 
@@ -25,14 +45,15 @@ class ToonRepository {
 //    private val diskIO: Executor? = null
 
     @Synchronized
-    fun getInstance(
-
+    public fun getInstance(
+        allToons: MutableLiveData<List<Politoon>>
     ): ToonRepository? {
         Log.i(LOG_TAG, "Getting the repository$sInstance")
         if (sInstance == null) {
             synchronized(LOCK) {
-                sInstance = ToonRepository(
-                )
+                sInstance =
+                        ToonRepository(
+                        )
                 Log.i(LOG_TAG, "Made new repository")
             }
         }
@@ -54,7 +75,8 @@ class ToonRepository {
         fetch()
     }
 
-    fun fetch() {
+    fun fetch(): MutableLiveData<List<Politoon>> {
+
         Log.i(LOG_TAG, "fetch: ")
         val BASE_URL = "https://politoons.herokuapp.com"
 
@@ -73,15 +95,17 @@ class ToonRepository {
             .subscribeOn(Schedulers.io())
             .subscribe(fun(result: List<Politoon>?) {
                 Log.i("Result", "There are ${result?.size} Java developers in Lagos")
+                allToons.postValue(result)
                 if (result != null) {
                     for (i in result) {
                         Log.i(LOG_TAG, "items : ${i.name}")
                     }
                 }
             }, { error ->
-                error.printStackTrace()
+                error?.printStackTrace()
             })
 
+        return allToons
     }
 }
 

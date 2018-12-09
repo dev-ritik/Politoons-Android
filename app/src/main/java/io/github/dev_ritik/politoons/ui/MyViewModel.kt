@@ -1,21 +1,22 @@
-package io.github.dev_ritik.politoons
+package io.github.dev_ritik.politoons.ui
 
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import android.util.Log
+import io.github.dev_ritik.politoons.data.ToonRepository
+import io.github.dev_ritik.politoons.model.Politoon
 
 
 class MyViewModel(private val mRepository: ToonRepository?) : ViewModel() {
     private val LOG_TAG = MyViewModel::class.java.simpleName
 
     // Weather forecast the user is looking at
-    var toon: MutableLiveData<Politoon> = MutableLiveData()
+    var toon: MutableLiveData<List<Politoon>>? = null
 
     init {
         Log.i(LOG_TAG, "MyViewModel: ")
-         mRepository?.fetch()
+        toon = mRepository?.fetch()
     }
 
 }

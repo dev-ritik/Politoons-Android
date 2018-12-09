@@ -1,4 +1,4 @@
-package io.github.dev_ritik.politoons
+package io.github.dev_ritik.politoons.model
 
 import com.google.gson.annotations.SerializedName
 

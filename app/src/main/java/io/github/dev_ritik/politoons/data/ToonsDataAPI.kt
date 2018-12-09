@@ -1,6 +1,6 @@
-package io.github.dev_ritik.politoons
+package io.github.dev_ritik.politoons.data
 
-
+import io.github.dev_ritik.politoons.model.Politoon
 import io.reactivex.Observable
 import retrofit2.http.GET
 
