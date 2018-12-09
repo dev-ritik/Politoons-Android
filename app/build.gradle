@@ -20,6 +20,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/proguard/androidx-annotations.pro'
+
+    }
 }
 
 dependencies {
@@ -30,4 +34,9 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    //livedata
+    implementation "androidx.lifecycle:lifecycle-livedata:2.0.0"
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+
 }
